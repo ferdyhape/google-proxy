@@ -28,7 +28,7 @@ export const fetchGoogle1 = async (req, res) => {
 
 export const fetchGoogle = async (req, res) => {
   try {
-    const query = req.query.q || 'intext:"ferdy hahan pradana"';
+    const query = req.query.q || 'intext:"polinema"';
     const start = parseInt(req.query.start || "0", 10);
 
     const html = await fetchGoogleHTML(query, start);
