@@ -44,6 +44,10 @@ export async function fetchGoogleHTML(query, start = 0) {
   return html;
 }
 
+export const testShowHTML = () => {
+  return process.env.TEST_SHOW_HTML;
+};
+
 export const checkGoogleCaptcha = (html) => {
   if (!html) return false;
   return html.includes('<div id="recaptcha"');
