@@ -1,29 +1,21 @@
 import {
   fetchGoogleHTML,
   checkGoogleCaptcha,
-  parseGoogleResults,
+  parseGoogleResultsUnified,
   isEnableTestShowHTML,
-  validationBodyCheck,
-  parseGoogleResultsDocument,
+  validateGoogleBody,
 } from "../utils/helper.js";
 
 export const fetchGoogle = async (req, res) => {
   try {
-    const errVal = validationBodyCheck(req.body);
+    const errors = validateGoogleBody(req.body);
+    if (errors) return res.status(400).json({ error: errors });
 
-    if (errVal) {
-      return res.status(400).json({ error: errVal });
-    }
     const { query, start = 0, cookie } = req.body;
-
-    // // update to use get for quick testing
-    // const { query, start = 0, cookie } = req.query;
-
     const html = await fetchGoogleHTML(query, start, cookie);
 
     if (isEnableTestShowHTML()) {
-      res.set("Content-Type", "text/html");
-      res.send(html);
+      return res.type("html").send(html);
     }
 
     if (checkGoogleCaptcha(html)) {
@@ -32,22 +24,13 @@ export const fetchGoogle = async (req, res) => {
       });
     }
 
-    let resultDocs = [];
-    const resultsGeneral = parseGoogleResults(html);
-    if (resultsGeneral.length === 0) {
-      resultDocs = parseGoogleResultsDocument(html);
-    }
-
-    const mergeResult = [...resultsGeneral, ...resultDocs];
-    const uniqueResults = Array.from(
-      new Map(mergeResult.map((r) => [r.link, r])).values()
-    );
+    const results = parseGoogleResultsUnified(html);
 
     res.json({
       query,
       start,
-      results: uniqueResults,
-      count: uniqueResults.length,
+      results,
+      count: results.length,
     });
   } catch (err) {
     console.error(err);
