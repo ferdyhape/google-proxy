@@ -2,18 +2,17 @@ import {
   fetchGoogleHTML,
   checkGoogleCaptcha,
   parseGoogleResults,
-  testShowHTML,
+  isEnableTestShowHTML,
 } from "../utils/helper.js";
 
 export const fetchGoogle = async (req, res) => {
   try {
-    const query = req.query.q || 'intext:"ferdy hahan pradana"';
-    const start = parseInt(req.query.start || "0", 10);
+    const { query = 'intext:"polinema"', start = 0, cookie } = req.body;
 
-    const html = await fetchGoogleHTML(query, start);
-    console.log(testShowHTML());
+    const html = await fetchGoogleHTML(query, start, cookie);
+    console.log(isEnableTestShowHTML());
 
-    if (!testShowHTML()) {
+    if (!isEnableTestShowHTML()) {
       res.set("Content-Type", "text/html");
       res.send(html);
     }

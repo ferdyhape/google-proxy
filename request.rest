@@ -1,0 +1,10 @@
+###
+POST http://localhost:3000/api/raw-google?start=0 HTTP/1.1
+Host: localhost:3000
+Content-Type: application/json
+
+{
+    "query": "intext:\"polinema\"",
+    "start": 0,
+    "cookie": "COOKIE_HERE"
+}

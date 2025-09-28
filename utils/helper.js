@@ -2,15 +2,13 @@ import fetch from "node-fetch";
 import "dotenv/config";
 import * as cheerio from "cheerio";
 
-const GOOGLE_COOKIE = process.env.GOOGLE_COOKIE;
-
-export async function fetchGoogleHTML(query, start = 0) {
+export async function fetchGoogleHTML(query, start = 0, cookie) {
   const headers = {
     accept:
       "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
     "accept-language": "en-US,en;q=0.9,id;q=0.8",
     "cache-control": "no-cache",
-    cookie: GOOGLE_COOKIE,
+    cookie: cookie,
     pragma: "no-cache",
     priority: "u=0, i",
     "sec-ch-ua": '"Brave";v="135", "Not-A.Brand";v="8", "Chromium";v="135"',
@@ -44,8 +42,9 @@ export async function fetchGoogleHTML(query, start = 0) {
   return html;
 }
 
-export const testShowHTML = () => {
-  return process.env.TEST_SHOW_HTML;
+export const isEnableTestShowHTML = () => {
+  // return true // for testing
+  return false;
 };
 
 export const checkGoogleCaptcha = (html) => {
